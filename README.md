@@ -1,25 +1,43 @@
 # Bias Lab – Media Bias Intelligence UI
 
-Rich exploratory interface for analyzing news media bias across five core dimensions, inspecting narrative clusters, and running ad‑hoc article analyses. Built with React + TypeScript + Vite, Tailwind CSS, React Query, React Router, and Recharts.
+Exploratory interface for analyzing news media bias across five core dimensions. You can browse narrative clusters (groups of related articles across different outlets), open any individual article, run your own ad‑hoc analysis on pasted text or a URL, and bulk‑fetch fresh news from GNews for instant scoring.
 
 > Backend Base URL (default): `https://bias-news-backend.onrender.com/api` (override via `VITE_API_BASE`)
+>
+> IMPORTANT: The backend runs on a **free Render instance**. If it has been idle it must “cold start” (usually 20–60s). First request may show a temporary network error. Just wait a little and press Refresh / reload; once awake everything is fast.
 
 ---
 
-## 1. Purpose & Vision
+## 1. Core Concepts (Read First)
+
+| Concept | What It Is | Where You See It | Data Returned |
+|---------|------------|------------------|---------------|
+| Narrative (Cluster) | A grouped set of related articles about the same emerging story, collected across multiple sources/outlets. | Home (`/`) list & Narrative Detail (`/narratives/:id`). | Cluster metadata + the full list of its member articles (each article object). |
+| Article | A single news article (may belong to a narrative cluster or stand alone). | Articles list (`/articles`) & Article Detail (`/articles/:id`). | Full article fields + optional biasScores (5 dimensions, phrases, reasoning, confidence). |
+| Analyze | Ad‑hoc on‑the‑fly scoring for text you paste OR a URL you provide (scraped then analyzed). Not stored permanently. | `/analyze` | One transient Article-shaped result with biasScores. |
+| Fetch | Bulk fetch via GNews: we query a topic, retrieve up to 10 recent articles, then run bias analysis for each (creating new analyzed articles + adding them to any forming narratives). | `/fetch` | Array of newly analyzed Article objects + any cluster relationships assigned. |
+
+Summary:
+* Narratives come bundled with their articles (so you don’t need a second call for the members).
+* The Articles list shows the universe of analyzed articles (from clusters, fetches, or prior ingestion) – essentially a flat view.
+* Analyze is for “bring your own content” (BYOC) one‑off inspection; no persistence.
+* Fetch seeds the system with fresh real‑world articles (topic search → up to 10 → AI scoring → immediately visible in lists & clusters).
+* Expect a short delay after deployment inactivity due to free hosting cold start.
+
+## 2. Purpose & Vision
 
 Bias Lab helps users:
-1. Understand how different outlets frame the same topic (narrative clusters).
-2. Inspect per‑article AI‑generated bias scores & highlighted phrases.
-3. Compare average bias tendencies across sources inside a cluster.
-4. Run ad‑hoc analysis of *any* article (paste content or supply a URL to scrape) without persisting it.
-5. Fetch & analyze fresh batches of articles for a topic (bulk ingestion) and explore them immediately.
+1. See how different outlets frame the *same* story (narrative clustering).
+2. Inspect any single article’s bias signature (dimension scores + highlighted phrases + confidence indicators).
+3. Compare sources inside a narrative (heatmap + distinctive phrases).
+4. Run quick “what if” / personal content analyses (Analyze).
+5. Rapidly ingest fresh topical coverage (Fetch → GNews → instant scoring).
 
 ---
 
-## 2. Current Feature Set
+## 3. Current Feature Set
 
-### 2.1 Core Data & Analysis
+### 3.1 Core Data & Analysis
 | Area | Features |
 |------|----------|
 | Articles | Listing, detail view with 5 bias dimensions, highlighted phrases (in detail page), radar visualization, primary sources, analysis status (ai / fallback-*), confidence included internally. |
@@ -28,7 +46,7 @@ Bias Lab helps users:
 | Bulk Fetch | Topic + optional sources triggers a GNews search; up to 10 related articles are fetched, normalized, then each is AI‑scored across the five bias dimensions (results returned immediately). |
 | Diagnostics (API) | Hook support for analysis status summary (not yet surfaced in UI widget). |
 
-### 2.2 User Interface / UX
+### 3.2 User Interface / UX
 * Responsive layout with sticky header and background grid aesthetic.
 * Global navigation: Narratives, Articles, Analyze (ad‑hoc), Fetch (bulk ingestion).
 * Async state components: loading & error states with retry.
@@ -36,7 +54,7 @@ Bias Lab helps users:
 * Tailwind utility design system + extended bias dimension color tokens.
 * Accessible semantic structure (headings, lists, time elements) – further a11y polish planned.
 
-### 2.3 Technical Stack
+### 3.3 Technical Stack
 | Layer | Choice | Notes |
 |-------|--------|-------|
 | Build | Vite + TypeScript | Fast HMR & production bundling. |
@@ -49,7 +67,7 @@ Bias Lab helps users:
 
 ---
 
-## 3. Architecture Overview
+## 4. Architecture Overview
 
 ```
 src/
@@ -70,7 +88,7 @@ Abort & Timeout: Analyze requests extended to 30s (scrape + AI). Aborted request
 
 ---
 
-## 4. Key Domain Models (Frontend)
+## 5. Key Domain Models (Frontend)
 
 See `API_DOCUMENTATION.md` for full backend schema. Frontend tracks:
 * `Article` (includes optional `biasScores` & `primarySources`).
@@ -81,7 +99,7 @@ Bias Dimensions: ideologicalStance, factualGrounding, framingChoices, emotionalT
 
 ---
 
-## 5. Implemented Routes
+## 6. Implemented Routes
 
 | Path | Component | Description |
 |------|-----------|-------------|
@@ -95,7 +113,7 @@ Bias Dimensions: ideologicalStance, factualGrounding, framingChoices, emotionalT
 
 ---
 
-## 6. UI Highlights
+## 7. UI Highlights
 * **Radar Chart**: Dual polygon (score + derived confidence band).
 * **Highlighted Phrases**: Token-level marking shows phrase influence (on article detail; can be extended to other views).
 * **Bias Distribution Bar**: Quick view of ideological distribution inside cluster.
@@ -105,7 +123,7 @@ Bias Dimensions: ideologicalStance, factualGrounding, framingChoices, emotionalT
 
 ---
 
-## 7. Environment & Configuration
+## 8. Environment & Configuration
 
 Frontend env var:
 * `VITE_API_BASE` – override backend API base (default `https://bias-news-backend.onrender.com/api`).
@@ -114,7 +132,7 @@ Backend (see server docs) expects `GOOGLE_AI_KEY`, `GNEWS_API_KEY`, etc.
 
 ---
 
-## 8. Development Setup
+## 9. Development Setup
 
 Prerequisites: Node 18+ recommended.
 
@@ -137,7 +155,7 @@ npx tsc --noEmit
 
 ---
 
-## 9. Error Handling Strategy
+## 10. Error Handling Strategy
 * Centralized `fetchJSON` throws errors with HTTP status & payload snippet.
 * React Query displays `ErrorState` with retry.
 * 404 responses do not retry (custom retry gate in QueryClient setup).
@@ -145,21 +163,21 @@ npx tsc --noEmit
 
 ---
 
-## 10. Performance & Bundle
+## 11. Performance & Bundle
 * Lazy load radar chart to keep initial route fast.
 * Stale times: articles (15s), narratives (30s), individual article/narrative (60s) – reduces refetch churn.
 * Potential next step: prefetch related narrative when hovering a cluster card.
 
 ---
 
-## 11. Security & Privacy Considerations
+## 12. Security & Privacy Considerations
 * Ad-hoc analysis not persisted; sensitive pasted text remains client-side + transient server processing.
 * No auth yet – future: API key gating or user roles for ingestion endpoints.
 * CORS: Ensure backend configured for allowed origin in deployment.
 
 ---
 
-## 12. Testing (Planned)
+## 13. Testing (Planned)
 Currently minimal. Proposed layers:
 1. Unit: highlight tokenizer, bias radar data mapping.
 2. Integration: mock fetch for article & narrative queries.
@@ -167,7 +185,7 @@ Currently minimal. Proposed layers:
 
 ---
 
-## 13. Roadmap (Near-Term)
+## 14. Roadmap (Near-Term)
 | Priority | Item | Notes |
 |----------|------|-------|
 | High | Diagnostics widget | Surface `/articles/diagnostics/status` in UI. |
@@ -183,7 +201,7 @@ Currently minimal. Proposed layers:
 
 ---
 
-## 14. Potential Backend Enhancements
+## 15. Potential Backend Enhancements
 * **Queued / async job model** for heavy analysis (push -> poll status) instead of long HTTP request.
 * **Model confidence calibration service** to better map confidence → interval width.
 * **Narrative clustering upgrade** (embedding-based with incremental updates).
@@ -194,7 +212,7 @@ Currently minimal. Proposed layers:
 
 ---
 
-## 15. Potential Frontend Enhancements
+## 16. Potential Frontend Enhancements
 * **Interactive bias dimension toggles** (show/hide radar layers or highlight categories).
 * **Phrase highlight legend & filtering** (toggle phrases by dimension, intensity scale).
 * **Confidence visualization** (radial translucent band or separate bar chart).
@@ -206,14 +224,16 @@ Currently minimal. Proposed layers:
 
 ---
 
-## 16. Deployment Notes
+## 17. Deployment Notes
+* Cold Start: First request after inactivity can take up to a minute; wait and retry.
+* Consider adding a lightweight `/health` ping on load to proactively wake backend.
 * Ensure backend base URL configured via `VITE_API_BASE` at build time.
 * Serve over HTTPS to avoid mixed-content issues when scraping external pages.
 * Consider reverse proxy (NGINX) to unify frontend & backend under single origin.
 
 ---
 
-## 17. Contributing
+## 18. Contributing
 1. Create a feature branch.
 2. Add / update tests for behavioral changes.
 3. Run type check + build before PR.
@@ -221,12 +241,12 @@ Currently minimal. Proposed layers:
 
 ---
 
-## 18. License
+## 19. License
 Internal / TBD – add a proper LICENSE file before open sourcing.
 
 ---
 
-## 19. Quick Start (TL;DR)
+## 20. Quick Start (TL;DR)
 ```
 npm install
 npm run dev   # open http://localhost:5173
@@ -238,8 +258,8 @@ VITE_API_BASE=https://your-api.example.com/api npm run dev
 
 ---
 
-## 20. Status
-MVP feature set implemented; next focus: diagnostics surfacing, usability (legend, confidence), and performance polish.
+## 21. Status
+MVP feature set implemented; ongoing: clearer confidence visualization & improved cold-start UX.
 
 ---
 
