@@ -3,10 +3,27 @@ import { useNarratives } from '../api/hooks';
 import { Loading } from '../components/Loading';
 import { ErrorState } from '../components/ErrorState';
 import { NarrativeClusterCard } from '../components/NarrativeClusterCard';
+import { ColdStartNotice } from '../components/ColdStartNotice';
 
 export const Home: React.FC = () => {
   const { data, isLoading, error, refetch, isRefetching } = useNarratives();
   const clusters = data?.clusters.slice(0,5) || [];
+  const [showNotice, setShowNotice] = React.useState(false);
+
+  React.useEffect(() => {
+    try {
+      const key = 'coldStartNoticeDismissedV1';
+      if (!localStorage.getItem(key)) {
+        const t = setTimeout(() => setShowNotice(true), 400);
+        return () => clearTimeout(t);
+      }
+  } catch { /* ignore storage errors */ }
+  }, []);
+
+  const dismiss = () => {
+  try { localStorage.setItem('coldStartNoticeDismissedV1', '1'); } catch { /* ignore */ }
+    setShowNotice(false);
+  };
   return (
     <div className="space-y-10">
       <div className="flex flex-col gap-4">
@@ -31,6 +48,7 @@ export const Home: React.FC = () => {
       {!isLoading && !error && clusters.length === 0 && (
         <div className="text-sm text-slate-500">No narratives available yet.</div>
       )}
+  {showNotice && <ColdStartNotice onClose={dismiss} />}
     </div>
   );
 };
