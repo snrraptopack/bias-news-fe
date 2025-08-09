@@ -13,9 +13,9 @@ const CustomTooltip: React.FC<TooltipProps> = ({ active, payload }) => {
 
 const RadarLazy: React.FC<Props> = ({ data }) => {
   return (
-    <div className="w-full h-64">
+    <div className="w-full h-64 sm:h-72">
       <ResponsiveContainer width="100%" height="100%">
-        <RadarChart data={data} outerRadius={90}>
+        <RadarChart data={data} outerRadius={window.innerWidth < 420 ? 70 : 90}>
           <PolarGrid stroke="#cbd5e1" radialLines={false} />
           <PolarAngleAxis dataKey="dimension" tick={{ fill: '#475569', fontSize: 10 }} />
           <PolarRadiusAxis tick={false} axisLine={false} angle={90} domain={[0,100]} />

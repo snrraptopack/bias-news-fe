@@ -7,6 +7,10 @@
 html, body, #root { height:100%; }
 body { font-family: theme('fontFamily.body'); background:#f8fafc; -webkit-font-smoothing:antialiased; }
 html { scroll-behavior:smooth; }
+table { border-collapse: separate; }
+table, pre, code, .prose { max-width:100%; }
+.prose { overflow-wrap: anywhere; }
+.no-x-scroll { overflow-x:hidden; }
 
 /* (Removed dark mode + skeleton styles per request) */
 

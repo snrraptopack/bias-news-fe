@@ -34,10 +34,10 @@ export const NarrativeDetail: React.FC = () => {
             <p className="text-sm text-slate-600">Framing: <span className="font-medium text-slate-700">{data.framingType}</span></p>
             <p className="text-xs text-slate-500">Timespan: {data.timeSpan.earliest ? new Date(data.timeSpan.earliest).toLocaleString() : '—'} → {data.timeSpan.latest ? new Date(data.timeSpan.latest).toLocaleString() : '—'}</p>
           </div>
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-8">
-              <section className="grid gap-6 md:grid-cols-2">
-                <div className="p-4 rounded-xl bg-white/80 ring-1 ring-slate-200 backdrop-blur">
+          <div className="grid gap-8 lg:grid-cols-3 max-w-full">
+            <div className="lg:col-span-2 space-y-8 min-w-0">
+              <section className="grid gap-6 md:grid-cols-2 min-w-0">
+                <div className="p-4 rounded-xl bg-white/80 ring-1 ring-slate-200 backdrop-blur min-w-0">
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 mb-3">Bias Distribution</h2>
                   <div className="flex h-4 w-full overflow-hidden rounded-full ring-1 ring-slate-200 mb-2">
                     {['left','center','right'].map(key => {
@@ -55,9 +55,9 @@ export const NarrativeDetail: React.FC = () => {
                     <span>R {data.biasDistribution.right}</span>
                   </div>
                 </div>
-                <div className="p-4 rounded-xl bg-white/80 ring-1 ring-slate-200 backdrop-blur space-y-4">
+                <div className="p-4 rounded-xl bg-white/80 ring-1 ring-slate-200 backdrop-blur space-y-4 min-w-0">
                   <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 mb-3">Average Scores</h2>
-                  <div className="grid grid-cols-5 gap-2">
+                  <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 gap-2">
                     {Object.entries(data.avgScores).map(([k,v]) => (
                       <div key={k} className="flex flex-col items-center gap-1">
                         <span className="text-[10px] uppercase tracking-wide font-semibold text-slate-500">{k.replace(/([A-Z])/g,' $1').split(' ')[0]}</span>
@@ -122,7 +122,7 @@ export const NarrativeDetail: React.FC = () => {
                 </ul>
               </section>
             </div>
-            <aside className="space-y-8">
+            <aside className="space-y-8 min-w-0">
               <section className="p-4 rounded-xl bg-white/80 ring-1 ring-slate-200 backdrop-blur">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 mb-3">Top Phrases</h2>
                 <ul className="flex flex-wrap gap-2">

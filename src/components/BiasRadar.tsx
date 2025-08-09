@@ -31,7 +31,7 @@ export const BiasRadar: React.FC<{ scores: BiasScores; compact?: boolean }> = ({
       <Suspense fallback={<div className="h-64 flex items-center justify-center text-xs text-slate-500">Loading chart…</div>}>
         <LazyRadar data={data} />
       </Suspense>
-      <div className="mt-4 grid grid-cols-5 gap-2">
+  <div className="mt-4 grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-5 gap-2">
         {DIMENSION_KEYS.map(k => {
           const dim = scores[k];
             const ci = dim.confidenceInterval;

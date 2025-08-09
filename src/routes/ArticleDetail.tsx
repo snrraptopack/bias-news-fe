@@ -16,7 +16,7 @@ export const ArticleDetail: React.FC = () => {
       {isLoading && <Loading label="Loading article" />}
       {error && <ErrorState error={error} retry={refetch} />}
       {data && (
-        <article className="prose max-w-none">
+  <article className="prose max-w-none break-words">
           <h1 className="mb-2 text-3xl font-display font-semibold tracking-tight">{data.headline}</h1>
             <div className="text-sm text-slate-500 flex gap-4 mb-6">
               <span>{data.source}</span>
@@ -79,9 +79,9 @@ const PhraseHighlights: React.FC<{ content: string; scores: BiasScores | null }>
   };
   return (
     <div className="mt-6 space-y-4 text-sm leading-relaxed">
-      <div className="flex flex-wrap gap-2 mb-2">
+    <div className="flex flex-wrap gap-2 mb-2">
         {DIMENSION_KEYS.map(k => (
-          <button key={k} onClick={()=>toggle(k)} className={`text-[10px] px-2 py-1 rounded-full ring-1 ${activeDims.has(k)?'bg-indigo-600 text-white ring-indigo-500':'bg-slate-100 text-slate-500 ring-slate-300 hover:bg-slate-200'}`}>{DIMENSION_LABELS[k]}</button>
+      <button key={k} onClick={()=>toggle(k)} className={`text-[10px] px-2 py-1 rounded-full ring-1 ${activeDims.has(k)?'bg-indigo-600 text-white ring-indigo-500':'bg-slate-100 text-slate-500 ring-slate-300 hover:bg-slate-200'}`}>{DIMENSION_LABELS[k]}</button>
         ))}
       </div>
       {paragraphs.map((paragraph,i)=> {

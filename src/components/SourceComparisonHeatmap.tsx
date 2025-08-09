@@ -33,7 +33,7 @@ export const SourceComparisonHeatmap: React.FC<Props> = ({ sourceAnalysis, maxSo
           <tbody>
             {entries.map(([src, info]) => (
               <tr key={src} className="group">
-                <th scope="row" className="sticky left-0 bg-white/80 backdrop-blur z-10 text-left font-medium p-2 text-slate-700 whitespace-nowrap">
+                <th scope="row" className="sticky left-0 bg-white/80 backdrop-blur z-10 text-left font-medium p-2 text-slate-700 whitespace-nowrap max-w-[10rem] overflow-hidden text-ellipsis">
                   <button onClick={() => setFocusSource(focusSource === src ? null : src)} className="hover:text-indigo-600 transition">{src}</button>
                   <span className="ml-1 text-slate-400 font-normal">({info.articleCount})</span>
                 </th>
