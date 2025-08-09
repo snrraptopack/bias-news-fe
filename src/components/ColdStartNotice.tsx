@@ -7,15 +7,18 @@ export const ColdStartNotice: React.FC<ColdStartNoticeProps> = ({ onClose }) => 
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-6">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
       <div role="dialog" aria-modal="true" className="relative w-full max-w-md rounded-lg bg-white shadow-xl ring-1 ring-slate-900/10 p-6 space-y-4">
-        <div className="space-y-2">
-          <h2 className="text-lg font-semibold text-slate-900">Warming up backend</h2>
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold text-slate-900">Backend Warming Up</h2>
           <p className="text-sm text-slate-600 leading-relaxed">
-            The API runs on a free Render instance that sleeps when idle. The first request after inactivity can take 30–60 seconds while it cold starts.
+            The API is on a <span className="font-medium">free Render instance</span> and uses an <span className="font-medium">in‑memory SQL store</span>. After idle periods the server sleeps, then restarts empty. First request may take 30–60s and initial lists can look sparse.
           </p>
+          <div className="rounded-md bg-indigo-50 border border-indigo-100 p-2 text-[11px] text-indigo-700 leading-relaxed">
+            <span className="font-semibold">Need instant data?</span> Open the <span className="font-semibold">Fetch</span> tab and enter a topic (e.g. <code className="font-mono text-indigo-600">election</code>) to pull & analyze up to 10 fresh articles immediately.
+          </div>
           <ul className="text-xs text-slate-500 list-disc pl-5 space-y-1">
-            <li>If you see an initial network error, wait a bit.</li>
-            <li>Then click <span className="font-medium text-slate-700">Refresh</span> or reload the page.</li>
-            <li>Once awake, responses are fast.</li>
+            <li>See a network error? Wait a few seconds (cold start) then retry.</li>
+            <li>Data gone after a while? The in-memory store reset on sleep.</li>
+            <li>Use <span className="font-medium text-slate-700">Fetch</span> for quick seeding; results appear across narratives & articles.</li>
           </ul>
         </div>
         <div className="flex justify-end gap-2 pt-2">
